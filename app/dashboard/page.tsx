@@ -1,10 +1,14 @@
 import { ToolPreviewCard } from "@/components/tool-preview-card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { fetchTools } from "@/lib/data";
 import { sampleTools } from "@/lib/sampleTools";
 import { SearchIcon } from "lucide-react";
 
 export default async function DashboardLayout() {
+  const tools = await fetchTools();
+  console.log("tools", tools);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
@@ -18,16 +22,17 @@ export default async function DashboardLayout() {
         </div>
       </div>
 
-      <Tabs defaultValue="account" className="w-full">
+      <Tabs defaultValue="teachers" className="w-full">
         <TabsList>
           <TabsTrigger value="teachers">Teachers</TabsTrigger>
           <TabsTrigger value="students">Students</TabsTrigger>
         </TabsList>
         <TabsContent value="teachers" className="mt-4">
           <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-            {sampleTools.map((tool) => (
+            {tools.map((tool) => (
               <ToolPreviewCard
                 key={tool.id}
+                id={tool.id}
                 title={tool.title}
                 description={tool.description}
               />

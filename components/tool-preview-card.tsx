@@ -1,13 +1,19 @@
+import { Tool } from "@/lib/definitions";
+import Link from "next/link";
+
 type Props = {
-  title: string;
-  description: string;
+  id: Tool["id"];
+  title: Tool["title"];
+  description: Tool["description"];
 };
 
-export const ToolPreviewCard = ({ title, description }: Props) => {
+export const ToolPreviewCard = ({ id, title, description }: Props) => {
   return (
-    <div className="border-2 rounded-md px-2 py-2 flex flex-col gap-1 hover:shadow-md">
-      <p className="text-md font-medium">{title}</p>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </div>
+    <Link href={`/dashboard/tools/${id}`}>
+      <div className="border rounded-md px-4 py-2 flex flex-col gap-1 hover:shadow-md">
+        <p className="text-md font-medium">{title}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </Link>
   );
 };

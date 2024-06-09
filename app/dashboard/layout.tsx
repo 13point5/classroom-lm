@@ -26,13 +26,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <NavItem
             label="AI Tools"
             icon={<BotIcon size={18} />}
-            active={pathname.endsWith("dashboard")}
+            active={
+              pathname.endsWith("dashboard") || pathname.includes("tools")
+            }
           />
         </Link>
 
         <Link href="/dashboard/classrooms">
           <NavItem
-            label="Classroons"
+            label="Classrooms"
             icon={<SchoolIcon size={18} />}
             active={pathname.endsWith("classrooms")}
           />
