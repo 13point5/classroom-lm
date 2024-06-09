@@ -3,18 +3,20 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchTools } from "@/lib/data";
 import { sampleTools } from "@/lib/sampleTools";
+import { auth } from "@clerk/nextjs/server";
 import { SearchIcon } from "lucide-react";
 
 export default async function DashboardLayout() {
   const tools = await fetchTools();
   console.log("tools", tools);
 
+  const user = await auth();
+  console.log("user", user);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-4">
-        <h2 className="text-3xl font-bold tracking-tight text-center">
-          AI Tools
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight">AI Tools</h2>
 
         <div className="relative">
           <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

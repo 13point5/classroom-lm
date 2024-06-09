@@ -20,3 +20,9 @@ export type Tool = {
   description: string;
   fields: ToolField[];
 };
+
+export type Classroom = {
+  id: string;
+  title: string;
+  joinCode: string;
+};

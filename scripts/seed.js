@@ -1,6 +1,9 @@
 const { db } = require("@vercel/postgres");
 const { sampleTools } = require("../lib/sampleTools");
-const { sampleClassrooms } = require("../lib/sampleClassrooms");
+const {
+  sampleClassrooms,
+  sampleTeacherIds,
+} = require("../lib/sampleClassrooms");
 
 const seedTools = async (client) => {
   try {
@@ -38,7 +41,7 @@ const seedClassrooms = async (client) => {
     CREATE TABLE IF NOT EXISTS classrooms (
       id UUID default uuid_generate_v4() PRIMARY KEY,
       title TEXT NOT NULL,
-      joinCode TEXT NOT NULL UNIQUE
+      join_code TEXT NOT NULL UNIQUE
     )
     `;
 
@@ -47,15 +50,64 @@ const seedClassrooms = async (client) => {
     const insertedClassrooms = await Promise.all(
       sampleClassrooms.map(
         (room) => client.sql`
-      INSERT INTO classrooms (title, joinCode)
+      INSERT INTO classrooms (title, join_code)
       VALUES (${room.title}, ${room.joinCode});
       `
       )
     );
 
-    console.log("Inserted classrooms", insertedClassrooms);
+    console.log("Inserted classrooms");
   } catch (error) {
     console.error("Error seeding classrooms:", error);
+    throw error;
+  }
+};
+
+const seedTeachers = async ({ client, classroomId }) => {
+  try {
+    const createTable = await client.sql`
+    CREATE TABLE IF NOT EXISTS teachers (
+      classroom_id UUID NOT NULL,
+      teacher_id TEXT NOT NULL,
+      FOREIGN KEY (classroom_id) REFERENCES classrooms(id) ON DELETE CASCADE
+    )
+    `;
+
+    console.log(`Created "classrooms" table`);
+
+    // Insert sample teachers
+    const insertedTeachers = await Promise.all(
+      sampleTeacherIds.map(
+        (teacherId) => client.sql`
+      INSERT INTO teachers (teacher_id, classroom_id)
+      VALUES (${teacherId}, ${classroomId});
+      `
+      )
+    );
+
+    console.log("Inserted teachers");
+  } catch (error) {
+    console.error("Error seeding teachers:", error);
+    throw error;
+  }
+};
+
+const getAnyClassroom = async (client) => {
+  try {
+    const classroom = await client.sql`
+      SELECT * FROM classrooms
+      LIMIT 1
+    `;
+
+    if (classroom.rows.length === 0) {
+      console.log(`No classrooms found`);
+      return null;
+    }
+
+    console.log("Retrieved classroom:", classroom.rows[0]);
+    return classroom.rows[0];
+  } catch (error) {
+    console.error("Error retrieving classroom:", error);
     throw error;
   }
 };
@@ -67,6 +119,8 @@ async function main() {
 
   // await seedTools(client);
   await seedClassrooms(client);
+  const classroom = await getAnyClassroom(client);
+  await seedTeachers({ client, classroomId: classroom.id });
 
   await client.end();
 }
