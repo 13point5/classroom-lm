@@ -1,5 +1,6 @@
 export type TextAreaField = {
-  name: "textarea";
+  name: string;
+  component: "textarea";
   metadata: {
     label: string;
     placeholder: string;
@@ -7,7 +8,8 @@ export type TextAreaField = {
 };
 
 export type GradeSelectField = {
-  name: "gradeSelect";
+  name: string;
+  component: "gradeSelect";
 };
 
 export type ToolField = TextAreaField | GradeSelectField;

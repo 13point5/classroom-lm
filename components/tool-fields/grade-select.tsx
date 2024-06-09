@@ -5,13 +5,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SelectProps } from "@radix-ui/react-select";
 
-export const GradeSelect = () => {
+export const GradeSelect = ({
+  onChange,
+}: {
+  onChange: SelectProps["onValueChange"];
+}) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <p className="font-medium">Grade</p>
 
-      <Select>
+      <Select onValueChange={onChange}>
         <SelectTrigger className="">
           <SelectValue placeholder="Select grade level" />
         </SelectTrigger>
